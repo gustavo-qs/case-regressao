@@ -21,8 +21,12 @@
         <button type="submit" :disabled="isRequesting">
           {{ isRequesting ? 'Aguardando...' : 'Prever' }}
         </button>
-        <button type="button" @click="generateRandomInputs()" :disabled="isRequesting" style="margin-left: 10px;">
+        <button type="button" @click="generateRandomInputs()" :disabled="isRequesting" style="margin-left: 10px; background-color: darkorange;">
           Aleatório
+        </button>
+        <!-- consultar histórico -->
+        <button type="button" @click="router.push('/history')" :disabled="isRequesting" style="margin-left: 10px; background-color:darkcyan;">
+          Consultar Histórico
         </button>
       </form>
     </div>
@@ -65,13 +69,15 @@
         Predição: <strong>{{ prediction }}</strong>
       </p>
       <button @click="savePrediction" :disabled="isSaving">
-        {{ isSaving ? 'Salvando...' : 'Salvar no Banco' }}
+        {{ isSaving ? 'Salvando...' : 'Salvar' }}
       </button>
     </div>
   </div>
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+
 export default {
   name: 'PrevisoesView',
   data() {
@@ -141,12 +147,14 @@ export default {
         X8_glazing_dist:   { label: 'Glazing Dist (X8)', value: randomInputs.X8_glazing_dist },
       };
     },
-    // Chama o endpoint de predição
+    getLoggedUser(){
+      return 1;
+    },
     async requestPrediction() {
       this.prediction = null;
       this.isRequesting = true;
       try {
-        const res = await fetch('http://localhost:8000/previsoes/', {
+        const res = await fetch('http://localhost:8000/prever/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(this.buildPayload()),
@@ -166,18 +174,26 @@ export default {
     // Salva input + resultado no backend
     async savePrediction() {
       this.isSaving = true;
-      const payload = {
-        ...this.buildPayload(),
-        prediction: this.prediction
-      };
+      const payload ={
+        x1: this.inputs.X1_compactness.value,
+        x3: this.inputs.X3_wall_area.value,
+        x5: this.inputs.X5_height.value,
+        x6: this.inputs.X6_orientation.value,
+        x7: this.inputs.X7_glazing_area.value,
+        x8: this.inputs.X8_glazing_dist.value,
+        y1: this.prediction[0],
+        y2: this.prediction[1],
+        usuario: this.getLoggedUser()
+      }
       try {
-        const res = await fetch('http://localhost:8000/previsoes/save/', {
+        const res = await fetch('http://localhost:8000/previsoes/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error(res.statusText);
         alert('Salvo com sucesso!');
+        this.prediction = null;
       } catch (err) {
         console.error('Erro ao salvar:', err);
         alert('Falha ao salvar. Veja console.');
@@ -185,7 +201,11 @@ export default {
         this.isSaving = false;
       }
     }
-  }
+  },
+  setup() {
+    const router = useRouter();
+    return { router };
+  },
 };
 </script>
 
