@@ -12,7 +12,7 @@ const changeView = (path) => {
   <div>
     <nav>
       <button @click="changeView('/users')">Gerenciar Usuário</button>
-      <button @click="changeView('/predict')">Prever Novos Dados</button>
+      <button @click="changeView('/predictions')">Prever Novos Dados</button>
       <button @click="changeView('/history')">Consultar Histórico</button>
     </nav>
 
