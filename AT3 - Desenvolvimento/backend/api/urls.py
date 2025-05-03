@@ -6,4 +6,5 @@ urlpatterns = [
     path('usuarios/', views.users),
     path('prever/', views.predict),
     path('previsoes/', views.predictions),
+    path('previsoes/<int:id>/', views.predictions_delete)
 ]

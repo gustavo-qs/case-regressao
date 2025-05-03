@@ -82,8 +82,14 @@ def predictions(request):
             serializer.save()
             return JsonResponse(serializer.data)
         return JsonResponse(serializer.errors, status=400)
-    elif request.method == 'DELETE':
-        data = JSONParser().parse(request)
-        predicao = Predicao.objects.get(id=data['id'])
-        predicao.delete()
-        return JsonResponse({'message': 'Predição deletada com sucesso!'}, status=204)
+
+@csrf_exempt
+def predictions_delete(request, id):
+    if request.method == 'DELETE':
+        try:
+            predicao = Predicao.objects.get(id=id)
+            predicao.delete()
+            return JsonResponse({'message': 'Predição deletada com sucesso!'}, status=204)
+        except Predicao.DoesNotExist:
+            return JsonResponse({'error': 'Predição não encontrada.'}, status=404)
+    return JsonResponse({'detail': 'Método não suportado'}, status=405)
