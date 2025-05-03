@@ -7,8 +7,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
     fields = ['id', 'nome_completo', 'email', 'telefone', 'senha']
 
 class PredicaoSerializer(serializers.ModelSerializer):
-  usuario = UsuarioSerializer(read_only=True)
+  usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())
 
   class Meta:
     model = Predicao
-    fields = ['id', 'usuario', 'data', 'y1', 'y2']
+    fields = ['id', 'usuario', 'x1', 'x3', 'x5', 'x6', 'x7', 'x8', 'y1', 'y2']
