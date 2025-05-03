@@ -60,6 +60,7 @@
         >
           Cancelar
         </button>
+        <button @click="$router.push('/')" style="background-color: #007bff; margin-left: 5px;">Voltar</button>
       </form>
     </div>
 

@@ -25,9 +25,10 @@
           Aleatório
         </button>
         <!-- consultar histórico -->
-        <button type="button" @click="router.push('/history')" :disabled="isRequesting" style="margin-left: 10px; background-color:darkcyan;">
+        <button type="button" @click="router.push('/history')" :disabled="isRequesting" style="margin-left: 10px; background-color: darkcyan;">
           Consultar Histórico
         </button>
+        <button @click="$router.push('/')" style="background-color: #007bff; margin-left: 5px;">Voltar</button>
       </form>
     </div>
     <!-- Nota sobre parâmetros não utilizados -->
