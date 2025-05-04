@@ -158,6 +158,7 @@ export default {
         const res = await fetch('http://localhost:8000/prever/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify(this.buildPayload()),
         });
         if (!res.ok) throw new Error(res.statusText);
@@ -190,6 +191,7 @@ export default {
         const res = await fetch('http://localhost:8000/previsoes/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error(res.statusText);

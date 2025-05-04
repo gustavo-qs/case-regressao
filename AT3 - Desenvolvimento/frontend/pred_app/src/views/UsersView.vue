@@ -130,7 +130,10 @@ export default {
     },
 
     async getUsers() {
-      const res = await fetch("http://localhost:8000/usuarios")
+      const res = await fetch("http://localhost:8000/usuarios", {
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      })
       this.users = await res.json()
     },
 
@@ -146,6 +149,7 @@ export default {
       delete payload.id
       await fetch("http://localhost:8000/usuarios/", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
@@ -155,6 +159,7 @@ export default {
       await fetch("http://localhost:8000/usuarios/", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(this.newUser),
       })
     },
@@ -173,6 +178,7 @@ export default {
       if (!confirm("Confirma exclusão?")) return
       await fetch("http://localhost:8000/usuarios/", {
         method: "DELETE",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       })

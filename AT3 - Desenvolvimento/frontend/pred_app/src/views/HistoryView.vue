@@ -53,7 +53,7 @@
     <button @click="$router.push('/predictions')" style="background-color: darkcyan;">Adicionar Previsão</button>
     <button @click="$router.push('/')" style="background-color: #007bff; margin-left: 5px;">Voltar</button>
   </div>
-  <div class="chart-container">
+  <div class="chart-container" style="display: flex; justify-content: center; align-items: center; height: 400px;">
     <canvas id="predictionsChart"></canvas>
   </div>
 
@@ -76,8 +76,8 @@ function initChart() {
     data: {
       labels: [],
       datasets: [
-        { label: 'Y1', data: [], fill: false, tension: 0.1 },
-        { label: 'Y2', data: [], fill: false, tension: 0.1 }
+        { label: 'Y1 - Heating Load', data: [], fill: false, tension: 0.1 },
+        { label: 'Y2 - Cooling Load', data: [], fill: false, tension: 0.1 }
       ]
     },
     options: {
@@ -101,7 +101,10 @@ watch(predictions, (list) => {
 
 async function fetchUsers() {
   try {
-    const res = await fetch('http://localhost:8000/usuarios');
+    const res = await fetch('http://localhost:8000/usuarios', {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    });
     users.value   = await res.json();
   } catch (err) {
     console.error('Erro ao buscar usuários:', err);
@@ -110,7 +113,10 @@ async function fetchUsers() {
 
 async function fetchPredictions() {
   try {
-    const res = await fetch('http://localhost:8000/previsoes/');
+    const res = await fetch('http://localhost:8000/previsoes/', {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    });
     predictions.value = await res.json();
   } catch (err) {
     console.error('Erro ao buscar previsões:', err);
@@ -120,7 +126,11 @@ async function fetchPredictions() {
 async function deletePrediction(id) {
   if (!confirm('Tem certeza que deseja excluir esta previsão?')) return;
   try {
-    await fetch(`http://localhost:8000/previsoes/${id}/`, { method: 'DELETE' });
+    await fetch(`http://localhost:8000/previsoes/${id}/`, { 
+      method: 'DELETE',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+    });
     predictions.value = predictions.value.filter(p => p.id !== id);
   } catch (err) {
     console.error('Erro ao excluir previsão:', err);
@@ -153,7 +163,7 @@ button:hover {
   background-color: darkred;
 }
 .history-view {
-  max-width: 1000px;
+  max-width: 1300px;
   margin: 40px auto;
   padding: 0 20px;
   font-family: sans-serif;
@@ -175,5 +185,15 @@ button:hover {
 .chart-container {
   position: relative;
   height: 400px;
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ddd;
 }
 </style>

@@ -6,84 +6,115 @@ const router = useRouter();
 const changeView = (path) => {
   router.push(path);
 };
+
+const logout = async () => {
+  try {
+    const res = await fetch('http://localhost:8000/logout/', {
+      method: 'POST',
+      credentials: 'include',
+    });
+    if (res.ok) {
+      localStorage.removeItem('userSession');
+      router.push('/login');
+    } else {
+      console.error('Logout failed');
+    }
+  } catch (error) {
+    console.error('Error during logout:', error);
+  }
+};
 </script>
 
 <template>
-  <div>
-    <nav>
-      <button @click="changeView('/users')">Gerenciar Usuário</button>
-      <button @click="changeView('/predictions')">Prever Novos Dados</button>
-      <button @click="changeView('/history')">Consultar Histórico</button>
+  <div class="app-container">
+    <nav class="main-nav">
+      <button @click="changeView('/users')" class="nav-btn">Gerenciar Usuário</button>
+      <button @click="changeView('/predictions')" class="nav-btn">Prever Novos Dados</button>
+      <button @click="changeView('/history')" class="nav-btn">Consultar Histórico</button>
+      <button @click="logout" class="nav-btn logout-btn">Sair</button>
     </nav>
-
-    <router-view />
+    <main class="view-container">
+      <router-view />
+    </main>
   </div>
 </template>
 
 <style scoped>
-/* Container geral */
-div {
+.app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0f4f8;
-  color: #333;
+  background-color: #eef2f7;
+  color: #1a202c;
   margin: 0;
   padding: 0;
 }
 
-/* Nav principal */
-nav {
+.main-nav {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
-  background: #ffffff;
-  padding: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: #ffffff;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 100;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-/* Botões de navegação */
-nav button {
-  background: #007acc;
+.nav-btn {
+  background-color: #3182ce;
   color: #fff;
   border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-nav button:hover {
-  background: #005fa3;
-  transform: translateY(-2px);
+.nav-btn:hover {
+  background-color: #2b6cb0;
+  transform: translateY(-1px);
 }
 
-nav button:active {
-  background: #004a80;
+.nav-btn:active {
+  background-color: #2c5282;
   transform: translateY(0);
 }
 
-/* Área de conteúdo */
-router-view {
-  flex: 1;
-  padding: 2rem;
+.logout-btn {
+  background-color: #e53e3e;
 }
 
-/* Responsividade */
-@media (max-width: 600px) {
-  nav {
+.logout-btn:hover {
+  background-color: #c53030;
+}
+
+.logout-btn:active {
+  background-color: #9b2c2c;
+}
+
+.view-container {
+  flex: 1;
+  padding: 2rem;
+  background-color: #f7fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+@media (max-width: 768px) {
+  .main-nav {
     flex-direction: column;
-    gap: 0.5rem;
+    align-items: stretch;
   }
 
-  nav button {
+  .nav-btn {
     width: 100%;
-    padding: 0.75rem;
+    text-align: center;
     font-size: 0.9rem;
   }
 }
