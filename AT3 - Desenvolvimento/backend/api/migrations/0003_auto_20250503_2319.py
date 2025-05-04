@@ -1,4 +1,5 @@
 from django.db import migrations
+from django.contrib.auth.hashers import make_password
 
 def create_default_user(apps, schema_editor):
     Usuario = apps.get_model('api', 'Usuario')
@@ -8,7 +9,7 @@ def create_default_user(apps, schema_editor):
             nome_completo='Senai',
             email='senai@senai.com',
             telefone='4332945100',
-            senha='Senai@2025' 
+            senha=make_password('Senai@2025') 
         )
 
 class Migration(migrations.Migration):

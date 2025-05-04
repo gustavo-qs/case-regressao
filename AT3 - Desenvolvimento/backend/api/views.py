@@ -9,6 +9,7 @@ from rest_framework.parsers import JSONParser
 from api.models import Usuario, Predicao
 from api.serializers import UsuarioSerializer, PredicaoSerializer
 from api.auth_utils import session_required
+from django.contrib.auth.hashers import check_password
 
 @csrf_exempt
 def login_view(request):
@@ -24,14 +25,9 @@ def login_view(request):
     except Usuario.DoesNotExist:
         return JsonResponse({'error': 'Credenciais inválidas'}, status=401)
 
-    # Se sua senha estiver em plaintext (não recomendado):
-    if user.senha != senha:
+    # Verifica o hash com a senha enviada :contentReference[oaicite:4]{index=4}
+    if not check_password(senha, user.senha):
         return JsonResponse({'error': 'Credenciais inválidas'}, status=401)
-
-    # Se sua senha estiver hashed, use check_password:
-    # from django.contrib.auth.hashers import check_password
-    # if not check_password(senha, user.senha):
-    #     return JsonResponse({'error': 'Credenciais inválidas'}, status=401)
 
     # Autentica: salva o ID na sessão
     request.session['user_id'] = user.id
@@ -60,8 +56,8 @@ def users(request):
         data = JSONParser().parse(request)
         serializer = UsuarioSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
+            user = serializer.save()
+            return JsonResponse(UsuarioSerializer(user).data, status=201)
         return JsonResponse(serializer.errors, status=400)
     elif request.method == 'PUT':
         data = JSONParser().parse(request)
