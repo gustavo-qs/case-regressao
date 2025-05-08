@@ -1,6 +1,4 @@
 # case-regressão
-
-Case utilizando o dataset Energy Efficiency para a concorrência de bolsas no Senai  
 **Gustavo Queiroz Silveira - 05/2025**
 
 ---
